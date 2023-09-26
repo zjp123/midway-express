@@ -1,5 +1,6 @@
 import { Provide } from '@midwayjs/core';
 import { IUserOptions } from '../interface';
+import { CutPipe, RegValid } from '../pipe/diy-pipe';
 
 @Provide()
 export class UserService {
@@ -10,5 +11,8 @@ export class UserService {
       phone: '12345678901',
       email: 'xxx.xxx@xxx.com',
     };
+  }
+  async invoke(@RegValid(/\d{11}/, CutPipe) phoneNumber: string) {
+    return phoneNumber;
   }
 }

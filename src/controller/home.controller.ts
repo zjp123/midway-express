@@ -1,6 +1,7 @@
-import { Controller, Get, Inject } from '@midwayjs/core';
+import { Controller, Get, Inject, Query } from '@midwayjs/core';
 import { Context } from '@midwayjs/express';
 import { ReportMiddleware } from '../middleware/reportMiddleware';
+import { CutPipe } from '../pipe/diy-pipe';
 
 @Controller('/')
 export class HomeController {
@@ -8,10 +9,10 @@ export class HomeController {
   ctx: Context;
 
   @Get('/', { middleware: [ReportMiddleware] })
-  async home(): Promise<string> {
+  async home(@Query() query: CutPipe): Promise<string> {
     // const cookieValue = this.ctx.cookies['test-midkie'];
     const cookieValue = this.ctx.signedCookies['test-midkie'];
-    console.log(cookieValue, 'cookie');
+    console.log(query, cookieValue, 'cookie');
     return 'Hello Midwayjs!';
   }
 }
