@@ -15,4 +15,10 @@ export class APIController {
     const user = await this.userService.getUser({ uid });
     return { success: true, message: 'OK', data: user };
   }
+  @Get('/get_invoke')
+  async getInvoke() {
+    const user = await this.userService.invoke('12345678');
+    console.log(user, 'useruser');
+    return { success: true, message: 'OK', data: user };
+  }
 }

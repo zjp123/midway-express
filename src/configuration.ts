@@ -1,4 +1,9 @@
-import { Configuration, App } from '@midwayjs/core';
+import {
+  Configuration,
+  App,
+  Inject,
+  MidwayDecoratorService,
+} from '@midwayjs/core';
 import * as express from '@midwayjs/express';
 import { join } from 'path';
 import { GlobalError } from './filter/global.filter-error';
@@ -6,7 +11,12 @@ import * as expressSource from 'express';
 // console.log(expressSource.static, 'expressSource')
 const cookieParser = require('cookie-parser'); // 单纯的解析cookie的
 // const expressSource = require('express');
+<<<<<<< HEAD
 import cookieConfig from './config/config.default';
+=======
+import cookieSec from './config/config.default';
+// import { CutPipe } from './pipe/diy-pipe';
+>>>>>>> 5f875ac1c346538619cd96bf32eae4981590a095
 @Configuration({
   imports: [express],
   importConfigs: [join(__dirname, './config')],
@@ -14,6 +24,9 @@ import cookieConfig from './config/config.default';
 export class MainConfiguration {
   @App('express')
   app: express.Application;
+
+  @Inject()
+  decoratorService: MidwayDecoratorService;
 
   async onReady() {
     // 中间件  最后的中间件先执行
@@ -35,6 +48,11 @@ export class MainConfiguration {
         signed: true,
       });
       next();
+    });
+    this.decoratorService.registerParameterHandler('reg-valid', options => {
+      // originArgs 是原始的方法入参
+      // 这里第一个参数是 ctx，所以取 ctx.user
+      return '66778899';
     });
   }
 }
