@@ -13,6 +13,18 @@ export class UserService {
     };
   }
   async invoke(@RegValid(/\d{11}/, CutPipe) phoneNumber: string) {
-    return phoneNumber;
+    return {
+      uid: phoneNumber,
+      username: 'mockedName',
+      phone: '12345678901',
+      email: 'xxx.xxx@xxx.com',
+    };
+  }
+  async invoke2(phoneNumber: string) {
+    return {
+      uid: phoneNumber,
+      username: '周杰伦',
+      age: 18,
+    };
   }
 }

@@ -11,12 +11,7 @@ import * as expressSource from 'express';
 // console.log(expressSource.static, 'expressSource')
 const cookieParser = require('cookie-parser'); // 单纯的解析cookie的
 // const expressSource = require('express');
-<<<<<<< HEAD
 import cookieConfig from './config/config.default';
-=======
-import cookieSec from './config/config.default';
-// import { CutPipe } from './pipe/diy-pipe';
->>>>>>> 5f875ac1c346538619cd96bf32eae4981590a095
 @Configuration({
   imports: [express],
   importConfigs: [join(__dirname, './config')],
@@ -39,7 +34,7 @@ export class MainConfiguration {
     this.app.useFilter([GlobalError]);
     this.app.useMiddleware((req, res, next) => {
       console.log(222);
-      req.session.userName = 'zjp888'
+      req.session.userName = 'zjp888';
       // 单纯cookie 写法
       res.cookie('test-midkie', '123', {
         // 1个小时
@@ -52,7 +47,9 @@ export class MainConfiguration {
     this.decoratorService.registerParameterHandler('reg-valid', options => {
       // originArgs 是原始的方法入参
       // 这里第一个参数是 ctx，所以取 ctx.user
-      return '66778899';
+      // return '66778899';
+      console.log(options, 'options');
+      return options.originArgs[0] ?? '66778899';
     });
   }
 }
