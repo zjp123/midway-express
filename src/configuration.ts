@@ -9,11 +9,13 @@ import { join } from 'path';
 import { GlobalError } from './filter/global.filter-error';
 import * as expressSource from 'express';
 // console.log(expressSource.static, 'expressSource')
-const cookieParser = require('cookie-parser'); // 单纯的解析cookie的
+// const cookieParser = require('cookie-parser'); // 单纯的解析cookie的
+import * as cookieParser from 'cookie-parser';
 // const expressSource = require('express');
 import cookieConfig from './config/config.default';
+import * as typegoose from '@midwayjs/typegoose';
 @Configuration({
-  imports: [express],
+  imports: [express, typegoose],
   importConfigs: [join(__dirname, './config')],
 })
 export class MainConfiguration {
