@@ -18,8 +18,10 @@ import cookieConfig from './config/config.default';
 import * as typegoose from '@midwayjs/typegoose';
 import * as mongoose from '@midwayjs/mongoose';
 import * as mongo from 'mongoose';
+import * as jwt from '@midwayjs/jwt';
+import { JwtMiddleware } from './middleware/jwt.middleware';
 @Configuration({
-  imports: [express, typegoose],
+  imports: [express, typegoose, jwt],
   importConfigs: [join(__dirname, './config')],
 })
 export class MainConfiguration {
@@ -78,5 +80,6 @@ export class MainConfiguration {
       console.log(options, 'options');
       return options.originArgs[0] ?? '66778899';
     });
+    this.app.useMiddleware(JwtMiddleware);
   }
 }

@@ -1,12 +1,20 @@
 import { Inject, Controller, Get, Query } from '@midwayjs/core';
-import { Context } from '@midwayjs/express';
+import { Context, Response } from '@midwayjs/express';
 import { UserService } from '../service/user.service';
 import { CutPipe } from '../pipe/diy-pipe';
+import { JwtService } from '@midwayjs/jwt';
 
 @Controller('/api')
 export class APIController {
+
+  @Inject()
+  jwtService: JwtService;
+
   @Inject()
   ctx: Context;
+
+  @Inject()
+  res: Response;
 
   @Inject()
   userService: UserService;
@@ -28,5 +36,11 @@ export class APIController {
     console.log(size, 'sizesize');
     // this.ctx.logger.error(new Error('custom error'));
     return { success: true, message: 'OK', data: user };
+  }
+  @Get('/register')
+  async register(@Query('name') name) {
+    const token = this.jwtService.signSync({data: name});
+    this.res.set('Authorization', token);
+    return {status: 200, data: {token}, message: 'ok'}
   }
 }

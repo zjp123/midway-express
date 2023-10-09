@@ -2,6 +2,10 @@ import { MidwayConfig } from '@midwayjs/core';
 import { User } from '../entity/user';
 // Cookie
 export default {
+  jwt: {
+    secret: 'zjpyfc888', // fs.readFileSync('xxxxx.key')
+    expiresIn: '2d', // https://github.com/vercel/ms
+  },
   keys: '1695094587438_6666', // use for cookie sign key, should change to your own and keep security
   express: {
     port: 7001,
