@@ -6,7 +6,7 @@ import { CutPipe } from '../pipe/diy-pipe';
 @Controller('/')
 export class HomeController {
   @Inject()
-  ctx: any;
+  ctx: any; // 它就是req
 
   @Inject()
   res: Response;

@@ -20,6 +20,7 @@ import * as mongoose from '@midwayjs/mongoose';
 import * as mongo from 'mongoose';
 import * as jwt from '@midwayjs/jwt';
 import { JwtMiddleware } from './middleware/jwt.middleware';
+import { Context } from 'vm';
 @Configuration({
   imports: [express, typegoose, jwt],
   importConfigs: [join(__dirname, './config')],
@@ -38,21 +39,25 @@ export class MainConfiguration {
     const connectionFactory = await container.getAsync(
       mongoose.MongooseDataSourceManager
     );
-    console.log(connectionFactory.getDataSourceNames(), this.oldMongooseConfig, 'mongos config')
+    console.log(
+      connectionFactory.getDataSourceNames(),
+      this.oldMongooseConfig,
+      'mongos config'
+    );
     // for (const dataSourceName of connectionFactory.getDataSourceNames()) {
-      // const conn = connectionFactory.getDataSource(dataSourceName);
-      // setTimeout(async () => { // 3秒后 数据库已连接成功 这时才能正常操作 db.collections()
-      //   const result = await conn.db.collection('orders').findOne()
-      //   console.log(result, '当前数据库collections')
-      // }, 3000);
+    // const conn = connectionFactory.getDataSource(dataSourceName);
+    // setTimeout(async () => { // 3秒后 数据库已连接成功 这时才能正常操作 db.collections()
+    //   const result = await conn.db.collection('orders').findOne()
+    //   console.log(result, '当前数据库collections')
+    // }, 3000);
     // }
     const conn: any = await mongo.connect(
       this.oldMongooseConfig.dataSource.default.uri,
       this.oldMongooseConfig.dataSource.default.options
     );
     // const db = conn.connection // 当前数据库
-    const result = await conn.connection.collection('orders').findOne()
-    console.log(result, '当前数据库collections')
+    const result = await conn.connection.collection('orders').findOne();
+    console.log(result, '当前数据库collections');
 
     // 中间件  最后的中间件先执行
     this.app.use(expressSource.static(join(__dirname, './public')));
@@ -63,7 +68,8 @@ export class MainConfiguration {
     // 这类过滤器是按照添加的顺序来匹配执行
     this.app.useFilter([GlobalError]);
     this.app.useMiddleware((req, res, next) => {
-      console.log(222);
+      // 在中间中设置后 在这里获取
+      console.log(req.session.user, 222);
       req.session.userName = 'zjp888';
       // 单纯cookie 写法
       res.cookie('test-midkie', '123', {

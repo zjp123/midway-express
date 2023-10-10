@@ -6,7 +6,6 @@ import { JwtService } from '@midwayjs/jwt';
 
 @Controller('/api')
 export class APIController {
-
   @Inject()
   jwtService: JwtService;
 
@@ -39,8 +38,15 @@ export class APIController {
   }
   @Get('/register')
   async register(@Query('name') name) {
-    const token = this.jwtService.signSync({data: name});
-    this.res.set('Authorization', token);
-    return {status: 200, data: {token}, message: 'ok'}
+    const token = this.jwtService.signSync({ data: name });
+    // this.res.set('Authorization', token);
+    // 把token 加密放在cookie中
+    this.res.cookie('auth_token', token, {
+      // 10天
+      expires: new Date(Date.now() + 24 * 3600000 * 10),
+      httpOnly: true,
+      signed: true,
+    });
+    return { status: 200, data: null, message: 'token ok' };
   }
 }
