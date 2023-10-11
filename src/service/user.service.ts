@@ -1,4 +1,4 @@
-import { Provide } from '@midwayjs/core';
+import { Context, Inject, Provide } from '@midwayjs/core';
 import { IUserOptions } from '../interface';
 import { CutPipe, RegValid } from '../pipe/diy-pipe';
 import { InjectEntityModel } from '@midwayjs/typegoose';
@@ -7,6 +7,9 @@ import { User } from '../entity/user';
 
 @Provide()
 export class UserService {
+  @Inject()
+  ctx: Context & any;
+
   @InjectEntityModel(User)
   userModel: ReturnModelType<typeof User>;
 
@@ -43,5 +46,12 @@ export class UserService {
     // find data
     const user = await this.userModel.findById(id).exec();
     console.log(user);
+  }
+
+  async testSingleApi() {
+    // 测试作用域降级问题
+    // const id = this.ctx.xxxx;
+    // ctx not found, will throw error
+    console.log(this.ctx.session.user, '测试作用域降级问题');
   }
 }

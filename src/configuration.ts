@@ -20,10 +20,13 @@ import * as mongoose from '@midwayjs/mongoose';
 import * as mongo from 'mongoose';
 import * as jwt from '@midwayjs/jwt';
 import { JwtMiddleware } from './middleware/jwt.middleware';
-import { Context } from 'vm';
+import * as lodash from 'lodash';
 @Configuration({
   imports: [express, typegoose, jwt],
   importConfigs: [join(__dirname, './config')],
+  detectorOptions: {
+    ignore: ['**/public/**'], // 忽略一些非ts类型的文件
+  },
 })
 export class MainConfiguration {
   @Config('mongoose')
@@ -87,5 +90,7 @@ export class MainConfiguration {
       return options.originArgs[0] ?? '66778899';
     });
     this.app.useMiddleware(JwtMiddleware);
+    // 向依赖注入容器中添加一些全局对象
+    container.registerObject('lodash', lodash);
   }
 }
