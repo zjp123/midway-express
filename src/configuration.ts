@@ -30,7 +30,8 @@ import * as lodash from 'lodash';
   },
 })
 export class MainConfiguration {
-  @Config(ALL)
+  // @Config('ALL')
+  @Config('session')
   allConfig;
 
   @Config('mongoose')
@@ -42,6 +43,10 @@ export class MainConfiguration {
   @Inject()
   decoratorService: MidwayDecoratorService;
 
+  /*
+  这里的 ready 指的是依赖注入容器 ready，并不是应用 ready，
+  所以你可以对应用做任意扩展，比如添加中间件，连接数据库等等。
+  */
   async onReady(container: IMidwayContainer) {
     console.log(this.allConfig, 'this.allConfig');
     const connectionFactory = await container.getAsync(
@@ -63,8 +68,14 @@ export class MainConfiguration {
       this.oldMongooseConfig.dataSource.default.uri,
       this.oldMongooseConfig.dataSource.default.options
     );
-    // const db = conn.connection // 当前数据库
-    const result = await conn.connection.collection('orders').findOne();
+    const db = conn.connection // 当前数据库
+    db.on('error', console.error.bind(console, '数据库连接错误'))
+
+    db.once('open', async () => {
+      console.log('成功连接到数据库');
+    })
+
+    const result = await db.collection('orders').findOne();
     console.log(result, '当前数据库collections');
 
     // 中间件  最后的中间件先执行
@@ -97,5 +108,25 @@ export class MainConfiguration {
     this.app.useMiddleware(JwtMiddleware);
     // 向依赖注入容器中添加一些全局对象
     container.registerObject('lodash', lodash);
+  }
+  async onConfigLoad() {
+    // 直接返回数据，会自动合并到配置中
+    return {
+      test: 1
+    }
+  }
+  /*
+  当要获取框架的服务对象，端口等信息时，就需要用到这个生命周期。
+  */
+  async onServerReady(container: IMidwayContainer): Promise<void> {
+    // 获取到 koa 中暴露的 Framework
+    // const framework = await container.getAsync(koa.Framework);
+    // const server = framework.getServer();
+    // ...
+
+  }
+  async onStop(): Promise<void> {
+    // 关闭数据库连接
+    // await this.db.close();
   }
 }
