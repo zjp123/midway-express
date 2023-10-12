@@ -5,6 +5,7 @@ import {
   MidwayDecoratorService,
   Config,
   IMidwayContainer,
+  ALL,
 } from '@midwayjs/core';
 import * as express from '@midwayjs/express';
 import { join } from 'path';
@@ -29,6 +30,9 @@ import * as lodash from 'lodash';
   },
 })
 export class MainConfiguration {
+  @Config(ALL)
+  allConfig;
+
   @Config('mongoose')
   oldMongooseConfig;
 
@@ -39,6 +43,7 @@ export class MainConfiguration {
   decoratorService: MidwayDecoratorService;
 
   async onReady(container: IMidwayContainer) {
+    console.log(this.allConfig, 'this.allConfig');
     const connectionFactory = await container.getAsync(
       mongoose.MongooseDataSourceManager
     );
