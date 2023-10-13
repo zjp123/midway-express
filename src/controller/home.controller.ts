@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Query } from '@midwayjs/core';
+import { Controller, Get, Inject, Query, FORMAT } from '@midwayjs/core';
 import { Response, Context } from '@midwayjs/express';
 import { ReportMiddleware } from '../middleware/reportMiddleware';
 import { CutPipe } from '../pipe/diy-pipe';
@@ -17,6 +17,9 @@ export class HomeController {
     const midkieCookie = this.ctx.signedCookies['test-midkie'];
     // const cookieArr = this.ctx.cookies;
     const session_user_name = this.ctx.session.userName;
+    // if (rememberMe) {
+    //   this.ctx.session.maxAge = FORMAT.MS.ONE_DAY * 30;
+    // }
     console.log(query, midkieCookie, session_user_name, 'session_user_name');
     return 'Hello Midwayjs!';
   }

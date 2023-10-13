@@ -25,7 +25,7 @@ export default {
     keys: ['love-zjy'], // 用于签名的密钥，可以是一个数组以提供多个密钥
     saveUninitialized: true,
     cookie: {
-      maxAge: 24 * 3600 * 1000, // ms
+      maxAge: 24 * 3600 * 1000, // ms 1天
       httpOnly: true,
       // sameSite: null,
     },
@@ -49,13 +49,32 @@ export default {
           connectTimeoutMS: 20000, // 设置连接超时时间为 20 秒
           maxIdleTimeMS: 60000, // 设置连接空闲时间的最大值为 1 分钟
           w: 'majority',
-          readConcernLevel: 'majority'
+          readConcernLevel: 'majority',
           // autoReconnect: true, // 无效 mongoose 6版本已去掉，查看官方文档，不要看中文文档
           // reconnectTries: 30, // 设置在断开连接后尝试重新连接的最大次数，默认为 30 次  无效 无效 mongoose 6版本已去掉，查看官方文档，不要看中文文档
           // reconnectInterval: 1000, // 设置两次重新连接尝试之间的等待时间，默认为 1000 毫秒（1 秒） 无效 无效 mongoose 6版本已去掉，查看官方文档，不要看中文文档
         },
         // 关联实体
         entities: [User],
+      },
+    },
+  },
+  midwayLogger: {
+    default: {
+      maxSize: '20m',
+      maxFiles: '7d',
+      enableConsole: false,
+    },
+    clients: {
+      coreLogger: {
+        level: 'warn',
+        consoleLevel: 'warn',
+        // ...
+      },
+      appLogger: {
+        level: 'warn',
+        consoleLevel: 'warn',
+        // ...
       },
     },
   },

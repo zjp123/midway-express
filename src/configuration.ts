@@ -21,6 +21,7 @@ import * as mongoose from '@midwayjs/mongoose';
 // import * as mongo from 'mongoose';
 import * as jwt from '@midwayjs/jwt';
 import { JwtMiddleware } from './middleware/jwt.middleware';
+import { RouterAuthMiddleware } from './middleware/router.auth.middleware';
 import * as lodash from 'lodash';
 // import { DBConnect } from './service/db.connect';
 import { DBConnect } from './utils/index';
@@ -34,7 +35,7 @@ import { DBConnect } from './utils/index';
 export class MainConfiguration {
   // MainConfiguration 模块里面的都是 单例作用域 请注意，凡是注入进来的模块都会 作用域降级处理
   // @Config('ALL')
-  @Config('session')
+  @Config('session') // 配置文件中的key
   allConfig;
 
   @Config('mongoose')
@@ -103,6 +104,7 @@ export class MainConfiguration {
       // 单纯cookie 写法
       res.cookie('test-midkie', '123', {
         // 1个小时
+        overwrite: true,
         expires: new Date(Date.now() + 1 * 3600000),
         httpOnly: true,
         signed: true,
@@ -116,6 +118,7 @@ export class MainConfiguration {
       return options.originArgs[0] ?? '66778899';
     });
     this.app.useMiddleware(JwtMiddleware);
+    this.app.useMiddleware(RouterAuthMiddleware);
     // 向依赖注入容器中添加一些全局对象
     container.registerObject('lodash', lodash);
   }
