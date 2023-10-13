@@ -18,10 +18,12 @@ import * as cookieParser from 'cookie-parser';
 import cookieConfig from './config/config.default';
 import * as typegoose from '@midwayjs/typegoose';
 import * as mongoose from '@midwayjs/mongoose';
-import * as mongo from 'mongoose';
+// import * as mongo from 'mongoose';
 import * as jwt from '@midwayjs/jwt';
 import { JwtMiddleware } from './middleware/jwt.middleware';
 import * as lodash from 'lodash';
+// import { DBConnect } from './service/db.connect';
+import { DBConnect } from './utils/index';
 @Configuration({
   imports: [express, typegoose, jwt],
   importConfigs: [join(__dirname, './config')],
@@ -30,6 +32,7 @@ import * as lodash from 'lodash';
   },
 })
 export class MainConfiguration {
+  // MainConfiguration 模块里面的都是 单例作用域 请注意，凡是注入进来的模块都会 作用域降级处理
   // @Config('ALL')
   @Config('session')
   allConfig;
@@ -42,6 +45,9 @@ export class MainConfiguration {
 
   @Inject()
   decoratorService: MidwayDecoratorService;
+
+  @Inject()
+  dbDBConnect: DBConnect;
 
   /*
   这里的 ready 指的是依赖注入容器 ready，并不是应用 ready，
@@ -57,6 +63,7 @@ export class MainConfiguration {
       this.oldMongooseConfig,
       'mongos config'
     );
+
     // for (const dataSourceName of connectionFactory.getDataSourceNames()) {
     // const conn = connectionFactory.getDataSource(dataSourceName);
     // setTimeout(async () => { // 3秒后 数据库已连接成功 这时才能正常操作 db.collections()
@@ -64,20 +71,23 @@ export class MainConfiguration {
     //   console.log(result, '当前数据库collections')
     // }, 3000);
     // }
-    const conn: any = await mongo.connect(
-      this.oldMongooseConfig.dataSource.default.uri,
-      this.oldMongooseConfig.dataSource.default.options
-    );
-    const db = conn.connection // 当前数据库
-    db.on('error', console.error.bind(console, '数据库连接错误'))
+    await this.dbDBConnect.createConnection(this.oldMongooseConfig);
+    /*
+      数据库连接模块
+      
+      const conn: any = await mongo.connect(
+        this.oldMongooseConfig.dataSource.default.uri,
+        this.oldMongooseConfig.dataSource.default.options
+      );
+      const db = conn.connection; // 当前数据库
+      db.on('error', console.error.bind(console, '数据库连接错误'));
 
-    db.once('open', async () => {
-      console.log('成功连接到数据库');
-    })
-
-    const result = await db.collection('orders').findOne();
-    console.log(result, '当前数据库collections');
-
+      db.once('open', async () => {
+        console.log('成功连接到数据库');
+      });
+      const result = await db.collection('orders').findOne();
+      console.log(result, '当前数据库collections');
+  */
     // 中间件  最后的中间件先执行
     this.app.use(expressSource.static(join(__dirname, './public')));
 
@@ -112,8 +122,8 @@ export class MainConfiguration {
   async onConfigLoad() {
     // 直接返回数据，会自动合并到配置中
     return {
-      test: 1
-    }
+      test: 1,
+    };
   }
   /*
   当要获取框架的服务对象，端口等信息时，就需要用到这个生命周期。
@@ -123,10 +133,9 @@ export class MainConfiguration {
     // const framework = await container.getAsync(koa.Framework);
     // const server = framework.getServer();
     // ...
-
   }
   async onStop(): Promise<void> {
     // 关闭数据库连接
-    // await this.db.close();
+    await this.dbDBConnect.stop();
   }
 }
