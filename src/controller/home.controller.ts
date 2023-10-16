@@ -5,11 +5,13 @@ import {
   Query,
   FORMAT,
   UseGuard,
+  Body,
 } from '@midwayjs/core';
 import { Response, Context } from '@midwayjs/express';
 import { ReportMiddleware } from '../middleware/reportMiddleware';
 import { CutPipe } from '../pipe/diy-pipe';
 import { AuthGuard } from '../guard/auth.guard';
+import { UserDTO } from '../dto/user';
 
 @UseGuard(AuthGuard)
 @Controller('/')
@@ -42,5 +44,9 @@ export class HomeController {
   @Get('/lanjieqi')
   async lanjieqi(@Query() query: CutPipe): Promise<string> {
     return '拦截器';
+  }
+
+  async updateUser(@Body() user: UserDTO) {
+    // typeof user.id === 'number'
   }
 }

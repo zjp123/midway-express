@@ -23,10 +23,11 @@ import * as jwt from '@midwayjs/jwt';
 import { JwtMiddleware } from './middleware/jwt.middleware';
 import { RouterAuthMiddleware } from './middleware/router.auth.middleware';
 import * as lodash from 'lodash';
+import * as validate from '@midwayjs/validate';
 // import { DBConnect } from './service/db.connect';
 import { DBConnect } from './utils/index';
 @Configuration({
-  imports: [express, typegoose, jwt],
+  imports: [express, typegoose, jwt, validate],
   importConfigs: [join(__dirname, './config')],
   detectorOptions: {
     ignore: ['**/public/**'], // 忽略一些非ts类型的文件
