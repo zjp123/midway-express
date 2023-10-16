@@ -20,7 +20,11 @@ export class HomeController {
     // if (rememberMe) {
     //   this.ctx.session.maxAge = FORMAT.MS.ONE_DAY * 30;
     // }
-    console.log(query, midkieCookie, session_user_name, 'session_user_name');
+    console.log(query, midkieCookie, session_user_name, 'session_user_name-HomeController');
     return 'Hello Midwayjs!';
+  }
+  @Get('/lanjieqi')
+  async lanjieqi(@Query() query: CutPipe): Promise<string> {
+    return '拦截器';
   }
 }

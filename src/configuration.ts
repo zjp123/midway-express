@@ -72,10 +72,10 @@ export class MainConfiguration {
     //   console.log(result, '当前数据库collections')
     // }, 3000);
     // }
-    await this.dbDBConnect.createConnection(this.oldMongooseConfig);
+    await this.dbDBConnect.createConnection();
     /*
       数据库连接模块
-      
+
       const conn: any = await mongo.connect(
         this.oldMongooseConfig.dataSource.default.uri,
         this.oldMongooseConfig.dataSource.default.options

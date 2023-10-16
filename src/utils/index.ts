@@ -1,15 +1,20 @@
-import { Provide, Scope, ScopeEnum } from '@midwayjs/core';
+import { Autoload, Config, Destroy, Init, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 import * as mongo from 'mongoose';
 
+// 也可以参考文档中数据源管理那块抽出来
 @Provide()
 @Scope(ScopeEnum.Request, { allowDowngrade: true })
 export class DBConnect {
+
+  @Config('mongoose')
+  mongooseConfig;
+
   private db;
 
-  async createConnection(oldMongooseConfig) {
+  async createConnection() {
     const conn: any = await mongo.connect(
-      oldMongooseConfig.dataSource.default.uri,
-      oldMongooseConfig.dataSource.default.options
+      this.mongooseConfig.dataSource.default.uri,
+      this.mongooseConfig.dataSource.default.options
     );
     this.db = conn.connection; // 当前数据库
     this.db.on('error', console.error.bind(console, '数据库连接错误'));
@@ -22,3 +27,39 @@ export class DBConnect {
     await this.db.close();
   }
 }
+
+// 下面是第二种实现 不用再onready中手动执行
+// 这样无需在 onReady 中使用 getAsync 方法即可自动初始化，并执行 init 方法。
+
+@Autoload()
+@Provide()
+@Scope(ScopeEnum.Request, { allowDowngrade: true })
+export class DBConnect2 {
+
+  @Config('mongoose')
+  mongooseConfig;
+
+  @Init()
+  async init() {
+    console.log('是自动执行吗')
+    // const conn: any = await mongo.connect(
+    //   this.mongooseConfig.dataSource.default.uri,
+    //   this.mongooseConfig.dataSource.default.options
+    // );
+    // const db = conn.connection; // 当前数据库
+    // db.on('error', console.error.bind(console, '数据库连接错误22'));
+
+    // db.once('open', async () => {
+    //   console.log('成功连接到数据库22');
+    // })
+    // db.on('disconnected', async () => {
+    //   console.log('数据库断开连接22');
+    // })
+  }
+
+  @Destroy()
+  async stop() {
+    // db.close
+  }
+}
+

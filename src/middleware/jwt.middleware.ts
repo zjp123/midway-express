@@ -68,7 +68,8 @@ export class JwtMiddleware {
 
   // 配置忽略鉴权的路由地址
   public match(ctx: Context): boolean {
-    const ignore = ctx.path.indexOf('/api/register') !== -1;
+    // 为true走鉴权
+    const ignore = ctx.path.indexOf('/api/register') !== -1 || ctx.path.indexOf('/') !== -1
     return !ignore;
   }
 }
