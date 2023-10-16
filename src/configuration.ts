@@ -9,7 +9,7 @@ import {
 } from '@midwayjs/core';
 import * as express from '@midwayjs/express';
 import { join } from 'path';
-import { GlobalError } from './filter/global.filter-error';
+import { GlobalError, NotFoundFilter } from './filter/global.filter-error';
 import * as expressSource from 'express';
 // console.log(expressSource.static, 'expressSource')
 // const cookieParser = require('cookie-parser'); // 单纯的解析cookie的
@@ -96,10 +96,10 @@ export class MainConfiguration {
     this.app.use(cookieParser(cookieConfig.keys));
 
     // 这类过滤器是按照添加的顺序来匹配执行
-    this.app.useFilter([GlobalError]);
+    this.app.useFilter([GlobalError, NotFoundFilter]);
     this.app.useMiddleware((req, res, next) => {
       // 在中间中设置后 在这里获取
-      console.log(req.session.user, 222);
+      console.log(req.session.user, '222MainConfiguration');
       req.session.userName = 'zjp888';
       // 单纯cookie 写法
       res.cookie('test-midkie', '123', {

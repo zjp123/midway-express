@@ -1,8 +1,17 @@
-import { Controller, Get, Inject, Query, FORMAT } from '@midwayjs/core';
+import {
+  Controller,
+  Get,
+  Inject,
+  Query,
+  FORMAT,
+  UseGuard,
+} from '@midwayjs/core';
 import { Response, Context } from '@midwayjs/express';
 import { ReportMiddleware } from '../middleware/reportMiddleware';
 import { CutPipe } from '../pipe/diy-pipe';
+import { AuthGuard } from '../guard/auth.guard';
 
+@UseGuard(AuthGuard)
 @Controller('/')
 export class HomeController {
   @Inject()
@@ -20,9 +29,16 @@ export class HomeController {
     // if (rememberMe) {
     //   this.ctx.session.maxAge = FORMAT.MS.ONE_DAY * 30;
     // }
-    console.log(query, midkieCookie, session_user_name, 'session_user_name-HomeController');
+    console.log(
+      query,
+      midkieCookie,
+      session_user_name,
+      'session_user_name-HomeController'
+    );
     return 'Hello Midwayjs!';
   }
+
+  // @UseGuard(AuthGuard)
   @Get('/lanjieqi')
   async lanjieqi(@Query() query: CutPipe): Promise<string> {
     return '拦截器';

@@ -34,7 +34,8 @@
   },
   "scripts": {
     "start": "cross-env MIDWAY_SERVER_ENV=prod NODE_ENV=prod node ./bootstrap.js",
-    "dev": "cross-env MIDWAY_SERVER_ENV=local NODE_ENV=local midway-bin dev --ts",
+    "dev_bac": "cross-env MIDWAY_SERVER_ENV=local NODE_ENV=local midway-bin dev --ts",
+    "dev": "cross-env MIDWAY_SERVER_ENV=local NODE_ENV=local midway-bin dev --ts --entryFile=bootstrap.js",
     "test": "midway-bin test --ts",
     "cov": "midway-bin cov --ts",
     "lint": "mwts check",

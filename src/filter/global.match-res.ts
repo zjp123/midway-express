@@ -7,10 +7,11 @@ export class GlobalMatchFilter {
   match(value, req, res) {
     // ...
     return {
-      status: 200,
+      code: 200,
       data: {
         value,
       },
+      message: 'ok',
     };
   }
 }
