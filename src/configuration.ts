@@ -26,8 +26,12 @@ import * as lodash from 'lodash';
 import * as validate from '@midwayjs/validate';
 // import { DBConnect } from './service/db.connect';
 import { DBConnect } from './utils/index';
+import * as crossDomain from '@midwayjs/cross-domain';
+import * as info from '@midwayjs/info';
+import * as axios from '@midwayjs/axios';
+import * as proxy from '@midwayjs/http-proxy';
 @Configuration({
-  imports: [express, typegoose, jwt, validate],
+  imports: [express, typegoose, jwt, validate, crossDomain, info, axios, proxy],
   importConfigs: [join(__dirname, './config')],
   detectorOptions: {
     ignore: ['**/public/**'], // 忽略一些非ts类型的文件

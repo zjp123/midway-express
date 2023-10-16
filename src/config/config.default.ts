@@ -1,7 +1,22 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { User } from '../entity/user';
+import { cors } from '../utils'; // 跨域配置相关
+
+import * as dotenv from 'dotenv';
+import path = require('path');
+
+if (process.env.MIDWAY_SERVER_ENV === 'prod') {
+  dotenv.config({ path: path.join(__dirname, '../../.env.prod') });
+} else {
+  dotenv.config({ path: path.join(__dirname, '../../.env.local') });
+}
+
 // Cookie
 export default {
+  cors,
+  info: {
+    infoPath: '/_zjP_info',
+  },
   jwt: {
     secret: 'zjpyfc888', // fs.readFileSync('xxxxx.key')
     expiresIn: '2d', // https://github.com/vercel/ms
