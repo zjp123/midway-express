@@ -23,12 +23,17 @@ import * as jwt from '@midwayjs/jwt';
 import { JwtMiddleware } from './middleware/jwt.middleware';
 import { RouterAuthMiddleware } from './middleware/router.auth.middleware';
 import * as lodash from 'lodash';
+// 主要参数校验
 import * as validate from '@midwayjs/validate';
 // import { DBConnect } from './service/db.connect';
 import { DBConnect } from './utils/index';
+// 跨域相关的配置
 import * as crossDomain from '@midwayjs/cross-domain';
+// 查看项目信息的info
 import * as info from '@midwayjs/info';
+// 发送请求的axios
 import * as axios from '@midwayjs/axios';
+// http请求转发--跟前端一样功能
 import * as proxy from '@midwayjs/http-proxy';
 @Configuration({
   imports: [express, typegoose, jwt, validate, crossDomain, info, axios, proxy],

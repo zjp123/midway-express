@@ -17,8 +17,10 @@
     "@midwayjs/validate": "^3.12.7",
     "@typegoose/typegoose": "^9.0.0",
     "dotenv": "^16.3.1",
+    "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
-    "mongoose": "^6.0.7"
+    "mongoose": "^6.0.7",
+    "pinia": "^2.1.7"
   },
   "devDependencies": {
     "@midwayjs/cli": "^2.0.0",
